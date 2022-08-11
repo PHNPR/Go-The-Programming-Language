@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -9,18 +10,18 @@ const con_tickets int = 50
 
 var con_name string = "Go Conference"
 var rem_tickets uint = 50
-var bookings = []string{}
+var bookings = make([]map[string]string , 0) 
 
 func main() {
 	greetUsers()
 
 	for {
-
 		firstname, lastname, email, usertickets := getuserinput()
-
+		
 		isvalidname, isvalidmail, isvalidtickets := validation(firstname, lastname, email, usertickets)
 
 		if isvalidname && isvalidmail && isvalidtickets {
+
 			bookTicket(usertickets, firstname, lastname, email)
 
 			first_names := getfirstnames()
@@ -78,20 +79,26 @@ func validation(firstname string, lastname string, email string, usertickets uin
 	return isvalidname, isvalidmail, isvalidtickets
 }
 
-func bookTicket(usertickets uint, firstname string, lastname string, email string) {
+func bookTicket(usertickets uint , firstname string , lastname string , email string) {
 	rem_tickets = rem_tickets - usertickets
+	var userdata = make(map[string]string)
 
-	bookings = append(bookings, firstname+" "+lastname)
+	userdata["first_name"] = firstname
+	userdata["last_name"] = lastname
+	userdata["email_id"] = email
+	userdata["ticket_count"] = strconv.FormatUint(uint64(usertickets) , 10)
 
-	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation mail at %v.\n", firstname, lastname, usertickets, email)
-	fmt.Printf("%v tickets are remaining for %v.\n", rem_tickets, con_name)
+	bookings = append(bookings , userdata)
+	fmt.Printf("List of bookings is %v\n" , bookings)
+
+	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation mail at %v.\n" , firstname , lastname , usertickets , email)
+	fmt.Printf("%v tickets are remaining for %v.\n" , rem_tickets , con_name)
 }
 
-func getfirstnames() []string {
+func getfirstnames() []string {   
 	firstnames := []string{}
-	for _, booking := range bookings {
-		var names = strings.Fields(booking)
-		firstnames = append(firstnames, names[0])
+	for _ , booking := range bookings {
+		firstnames = append(firstnames, booking["first_name"])
 	}
 	return firstnames
 }
