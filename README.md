@@ -1,2 +1,3 @@
-# Go-The-Programming-Language
-This repo consists of my beginner projects in Go which I did while learning Golang :)
+# GoLang
+This repo consists of my projects in Go.  
+Learning through working on projects.
