@@ -5,68 +5,93 @@ import (
 	"strings"
 )
 
+const con_tickets int = 50
+
+var con_name string = "Go Conference"
+var rem_tickets uint = 50
+var bookings = []string{}
+
 func main() {
-	con_name := "Go Conference"   		 
-	const con_tickets int = 50			 
-	var rem_tickets uint = 50			
-	bookings := []string{}				 
+	greetUsers()
 
-	fmt.Printf("Welcome to %v booking application\n" , con_name)
-	fmt.Printf("We have total of %v tickets and %v are still available\n" , con_tickets , rem_tickets)
-	fmt.Println("Get your tickets here to attend")
+	for {
 
-	for{
-		var firstname string    		
-		var lastname string    		
-		var email string    			
-		var usertickets uint     
+		firstname, lastname, email, usertickets := getuserinput()
 
-		fmt.Print("Enter your first name : ") 
-		fmt.Scan(&firstname)
-
-		fmt.Print("Enter your last name : ") 
-		fmt.Scan(&lastname)	
-
-		fmt.Print("Enter your email : ")		
-		fmt.Scan(&email)	
-
-		fmt.Print("Enter number of tickets : ")		
-		fmt.Scan(&usertickets)
-
-		isvalidname := len(firstname) >= 2 && len(lastname) >= 2
-		isvalidmail := strings.Contains(email,"@")
-		isvalidtickets := usertickets > 0 && rem_tickets >= usertickets
+		isvalidname, isvalidmail, isvalidtickets := validation(firstname, lastname, email, usertickets)
 
 		if isvalidname && isvalidmail && isvalidtickets {
-			rem_tickets = rem_tickets - usertickets
+			bookTicket(usertickets, firstname, lastname, email)
 
-			bookings = append(bookings , firstname + " " + lastname)
-
-			fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation mail at %v.\n" , firstname , lastname , usertickets , email)
-			fmt.Printf("%v tickets are remaining for %v.\n" , rem_tickets , con_name)
-
-			firstnames := []string{}
-
-			for _ , booking := range bookings {
-				var names = strings.Fields(booking)
-				firstnames = append(firstnames, names[0])
-			}
-			fmt.Printf("The first names of bookings are : %v\n" , firstnames)
+			first_names := getfirstnames()
+			fmt.Printf("The first names of bookings are : %v\n", first_names)
 
 			if rem_tickets == 0 {
 				fmt.Println("Our Conference is booked out .Comeback later.")
 				break
 			}
 		} else {
-			if !isvalidname{ 
+			if !isvalidname {
 				fmt.Println("Username is too short")
 			}
-			if !isvalidmail{ 
+			if !isvalidmail {
 				fmt.Println("Email address you entered doesn't contain @")
 			}
-			if !isvalidtickets{ 
+			if !isvalidtickets {
 				fmt.Println("Number of tickets you entered is invalid")
 			}
 		}
-	} 
+	}
+}
+
+func greetUsers() {
+	fmt.Printf("Welcome to %v booking application\n", con_name)
+	fmt.Printf("We have total of %v tickets and %v are still available\n", con_tickets, rem_tickets)
+	fmt.Println("Get your tickets here to attend")
+}
+
+func getuserinput() (string, string, string, uint) {
+	var firstname string
+	var lastname string
+	var email string
+	var usertickets uint
+
+	fmt.Print("Enter your first name : ")
+	fmt.Scan(&firstname)
+
+	fmt.Print("Enter your last name : ")
+	fmt.Scan(&lastname)
+
+	fmt.Print("Enter your email : ")
+	fmt.Scan(&email)
+
+	fmt.Print("Enter number of tickets : ")
+	fmt.Scan(&usertickets)
+
+	return firstname, lastname, email, usertickets
+}
+
+func validation(firstname string, lastname string, email string, usertickets uint) (bool, bool, bool) {
+	isvalidname := len(firstname) >= 2 && len(lastname) >= 2
+	isvalidmail := strings.Contains(email, "@")
+	isvalidtickets := usertickets > 0 && rem_tickets >= usertickets
+	return isvalidname, isvalidmail, isvalidtickets
+}
+
+func bookTicket(usertickets uint, firstname string, lastname string, email string) {
+	rem_tickets = rem_tickets - usertickets
+
+	bookings = append(bookings, firstname+" "+lastname)
+
+	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation mail at %v.\n", firstname, lastname, usertickets, email)
+	fmt.Printf("%v tickets are remaining for %v.\n", rem_tickets, con_name)
+}
+
+func getfirstnames() []string {
+	firstnames := []string{}
+	for _, booking := range bookings {
+		var names = strings.Fields(booking)
+		firstnames = append(firstnames, names[0])
+	}
+	return firstnames
 }
