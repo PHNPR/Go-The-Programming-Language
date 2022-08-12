@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strings"
+	"time"
 )
 
 const con_tickets int = 50
@@ -29,6 +30,7 @@ func main() {
 		if isvalidname && isvalidmail && isvalidtickets {
 
 			bookTicket(usertickets, firstname, lastname, email)
+			sendTicket(usertickets, firstname, lastname, email)
 
 			first_names := getfirstnames()
 			fmt.Printf("The first names of bookings are : %v\n", first_names)
@@ -99,6 +101,14 @@ func bookTicket(usertickets uint , firstname string , lastname string , email st
 
 	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation mail at %v.\n" , firstname , lastname , usertickets , email)
 	fmt.Printf("%v tickets are remaining for %v.\n" , rem_tickets , con_name)
+}
+
+func sendTicket(usertickets uint , firstname string , lastname string , email string){
+	time.Sleep(5 * time.Second)
+	var ticket = fmt.Sprintf("%v tickets for %v %v" , usertickets , firstname , lastname)
+	fmt.Println("##### ##### ##### ##### #####")
+	fmt.Printf("Sending tickets:\n %v \nto email address %v\n" , ticket , email)
+	fmt.Println("##### ##### ##### ##### #####")
 }
 
 func getfirstnames() []string {   
