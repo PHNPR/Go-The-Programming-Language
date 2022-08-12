@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 )
 
@@ -10,7 +9,14 @@ const con_tickets int = 50
 
 var con_name string = "Go Conference"
 var rem_tickets uint = 50
-var bookings = make([]map[string]string , 0) 
+var bookings = make([]UserData , 0) 
+
+type UserData struct {
+	first_name string
+	last_name string
+	email_id string
+	ticket_count uint
+}
 
 func main() {
 	greetUsers()
@@ -81,12 +87,12 @@ func validation(firstname string, lastname string, email string, usertickets uin
 
 func bookTicket(usertickets uint , firstname string , lastname string , email string) {
 	rem_tickets = rem_tickets - usertickets
-	var userdata = make(map[string]string)
-
-	userdata["first_name"] = firstname
-	userdata["last_name"] = lastname
-	userdata["email_id"] = email
-	userdata["ticket_count"] = strconv.FormatUint(uint64(usertickets) , 10)
+	var userdata = UserData{
+		first_name: firstname,
+		last_name: lastname,
+		email_id: email,
+		ticket_count: usertickets,
+	}
 
 	bookings = append(bookings , userdata)
 	fmt.Printf("List of bookings is %v\n" , bookings)
@@ -98,7 +104,7 @@ func bookTicket(usertickets uint , firstname string , lastname string , email st
 func getfirstnames() []string {   
 	firstnames := []string{}
 	for _ , booking := range bookings {
-		firstnames = append(firstnames, booking["first_name"])
+		firstnames = append(firstnames, booking.first_name)
 	}
 	return firstnames
 }
